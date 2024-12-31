@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/social-linking",
+    "crates/twitter-oracle-contract",
+    "crates/twitter-oracle-node"
+]
+
+[workspace.dependencies]
+near-sdk = "5.7"
+intear-oracle = { git = "https://github.com/INTEARnear/oracle/" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"

@@ -1,0 +1,17 @@
+{
+  "name": "twitter-linking",
+  "version": "1.0.0",
+  "description": "NEAR Protocol Twitter account linking system",
+  "scripts": {
+    "deploy:oracle": "near deploy twitter-oracle-contract.near contracts/twitter-oracle-contract/target/wasm32-unknown-unknown/release/twitter_oracle.wasm",
+    "init:oracle": "near call twitter-oracle-contract.near new '{\"oracle_contract\": \"oracle.near\", \"authorized_validator\": \"validator.near\"}' --accountId deployer.near",
+    "build:contracts": "cd contracts/twitter-oracle-contract && cargo build --target wasm32-unknown-unknown --release && cd ../main-contract && cargo build --target wasm32-unknown-unknown --release",
+    "start:validator": "cd validator && cargo run --release -- --config validator-config.json",
+    "dev:frontend": "cd frontend && bun run dev",
+    "build:frontend": "cd frontend && bun run build",
+    "deploy:all": "npm run build:contracts && npm run deploy:oracle && npm run init:oracle"
+  },
+  "dependencies": {
+    "near-protocol-rewards": "^0.3.3"
+  }
+}
