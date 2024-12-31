@@ -2,6 +2,39 @@
 
 A decentralized system for linking Twitter accounts to NEAR accounts using smart contracts and oracles.
 
+## System Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant Main Contract
+    participant Twitter Oracle
+    participant Oracle Node
+    participant Twitter API
+
+    Note over User,Twitter API: Account Linking Flow
+    User->>Frontend: 1. Initiate linking
+    Frontend->>Main Contract: 2. init_linking()
+    Main Contract-->>Frontend: linking_id
+    
+    Note over User,Twitter API: OAuth Flow
+    Frontend->>Twitter API: 3. OAuth redirect
+    User->>Twitter API: 4. Approve app
+    Twitter API-->>Frontend: 5. oauth_token
+    
+    Note over User,Twitter API: Verification Flow
+    Frontend->>Main Contract: 6. verify_link(linking_id, token)
+    Main Contract->>Twitter Oracle: 7. request_verification(token)
+    
+    Note over User,Twitter API: Validation Flow
+    Oracle Node->>Twitter Oracle: 8. Poll for requests
+    Oracle Node->>Twitter API: 9. Verify token
+    Oracle Node->>Twitter Oracle: 10. submit_verification()
+    Twitter Oracle->>Main Contract: 11. Callback with result
+    Main Contract-->>Frontend: 12. Link confirmed
+```
+
 ## Project Structure
 
 ```
@@ -118,39 +151,6 @@ bun run dev
    - Timeout mechanisms in place
    - Retry strategies implemented
    - Clear error messages provided
-
-## System Flow
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Main Contract
-    participant Twitter Oracle
-    participant Oracle Node
-    participant Twitter API
-
-    Note over User,Twitter API: Account Linking Flow
-    User->>Frontend: 1. Initiate linking
-    Frontend->>Main Contract: 2. init_linking()
-    Main Contract-->>Frontend: linking_id
-    
-    Note over User,Twitter API: OAuth Flow
-    Frontend->>Twitter API: 3. OAuth redirect
-    User->>Twitter API: 4. Approve app
-    Twitter API-->>Frontend: 5. oauth_token
-    
-    Note over User,Twitter API: Verification Flow
-    Frontend->>Main Contract: 6. verify_link(linking_id, token)
-    Main Contract->>Twitter Oracle: 7. request_verification(token)
-    
-    Note over User,Twitter API: Validation Flow
-    Oracle Node->>Twitter Oracle: 8. Poll for requests
-    Oracle Node->>Twitter API: 9. Verify token
-    Oracle Node->>Twitter Oracle: 10. submit_verification()
-    Twitter Oracle->>Main Contract: 11. Callback with result
-    Main Contract-->>Frontend: 12. Link confirmed
-```
 
 ## License
 
